@@ -1,0 +1,5 @@
+<resources>
+	<string name="app_name">wayezi_cctv module</string>
+	<string name="start_recording" />
+	<string name="stop_recording" />
+</resources>
