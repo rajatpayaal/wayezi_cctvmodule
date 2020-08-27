@@ -15,12 +15,12 @@ import android.widget.ToggleButton;
 public class MainActivity extends Activity implements SurfaceHolder.Callback {
     private final String VIDEO_PATH_NAME = "/mnt/sdcard/121212   .mp4";
 
-    private MediaRecorder mMediaRecorder;
-    private Camera mCamera;
-    private SurfaceView mSurfaceView;
-    private SurfaceHolder mHolder;
-    private View mToggleButton;
-    private boolean mInitSuccesful;
+    private MediaRecorder rmediaRecorder;
+    private Camera rCamera;
+    private SurfaceView rsurfaceView;
+    private SurfaceHolder rHolder;
+    private View rtoggleButton;
+    private boolean rInitSuccesful;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,29 +30,29 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         // we shall take the video in landscape orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
-        mSurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
-        mHolder = mSurfaceView.getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        rsurfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        rHolder = rsurfaceView.getHolder();
+        rHolder.addCallback(this);
+        rHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
-        mToggleButton = (ToggleButton) findViewById(R.id.toggleRecordingButton);
-        mToggleButton.setOnClickListener(new OnClickListener() {
+        rtoggleButton = (ToggleButton) findViewById(R.id.toggleRecordingButton);
+        rtoggleButton.setOnClickListener(new OnClickListener() {
             @Override
-            // toggle video recording
+            // toggle video recording // resolve that part stop on toggle button
             public void onClick(View v) {
                 if (((ToggleButton) v).isChecked()) {
-                    mMediaRecorder.start();
+                    rmediaRecorder.start();
                     try {
-                        Thread.sleep(30 * 1000); // This will recode for 10 seconds, if you don't want then just remove it.
+                        Thread.sleep(30 * 1000); // This will recode for 10 seconds, you can change this.
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                 }else {
-                    mMediaRecorder.stop();
-                    mMediaRecorder.reset();
+                    rmediaRecorder.stop();
+                    rmediaRecorder.reset();
                     try {
-                        initRecorder(mHolder.getSurface());
+                        initRecorder(rHolder.getSurface());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -66,34 +66,34 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     private void initRecorder(Surface surface) throws IOException {
         // It is very important to unlock the camera before doing setCamera
         // or it will results in a black preview
-        if (mCamera == null) {
-            mCamera = Camera.open();
-            mCamera.unlock();
+        if (rCamera == null) {
+            rCamera = Camera.open();
+            rCamera.unlock();
         }
 
-        if (mMediaRecorder == null) mMediaRecorder = new MediaRecorder();
-        mMediaRecorder.setPreviewDisplay(surface);
-        mMediaRecorder.setCamera(mCamera);
+        if (rmediaRecorder == null) rmediaRecorder = new MediaRecorder();
+        rmediaRecorder.setPreviewDisplay(surface);
+        rmediaRecorder.setCamera(rCamera);
 
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-        //       mMediaRecorder.setOutputFormat(8);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
-        mMediaRecorder.setVideoFrameRate(30);
-        mMediaRecorder.setVideoSize(640, 480);
-        mMediaRecorder.setOutputFile(VIDEO_PATH_NAME);
+        rmediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
+        //       rmediaRecorder.setOutputFormat(8);
+        rmediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        rmediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        rmediaRecorder.setVideoEncodingBitRate(512 * 1000);
+        rmediaRecorder.setVideoFrameRate(30);
+        rmediaRecorder.setVideoSize(640, 480);
+        rmediaRecorder.setOutputFile(VIDEO_PATH_NAME);
 
-        mMediaRecorder.prepare();
+        rmediaRecorder.prepare();
 
-        mInitSuccesful = true;
+        rInitSuccesful = true;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            if (!mInitSuccesful)
-                initRecorder(mHolder.getSurface());
+            if (!rInitSuccesful)
+                initRecorder(rHolder.getSurface());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,12 +111,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     private void shutdown() {
         // Release MediaRecorder and especially the Camera as it's a shared
         // object that can be used by other applications
-        mMediaRecorder.reset();
-        mMediaRecorder.release();
-        mCamera.release();
+        rmediaRecorder.reset();
+        rmediaRecorder.release();
+        rCamera.release();
 
         // once the objects have been released they can't be reused
-        mMediaRecorder = null;
-        mCamera = null;
+        rmediaRecorder = null;
+        rCamera = null;
     }
 }
